@@ -32,32 +32,25 @@ navLinks.forEach(link => {
   });
 });
 
-window.addEventListener('scroll', () => {
-  let scrollPos = window.scrollY + 100;
+const revealElements = document.querySelectorAll('.about-container, .projects-container, .services-container, .contact-content');
+revealElements.forEach(el => el.classList.add('reveal'));
 
-  sections.forEach(section => {
-    if (scrollPos >= section.offsetTop && scrollPos < section.offsetTop + section.offsetHeight) {
-      removeActive();
-      const activeLink = document.querySelector(`.ul-list li a[href="#${section.id}"]`);
-      if (activeLink) activeLink.parentElement.classList.add('active');
-    }
-  });
-
-  backToTop.classList.toggle('is-visible', window.scrollY > 500);
+function handleReveal() {
+  const windowHeight = window.innerHeight;
+  const revealPoint = 100;
 
   revealElements.forEach(el => {
-    const windowHeight = window.innerHeight;
     const elementTop = el.getBoundingClientRect().top;
-    const revealPoint = 150;
-
-    if(elementTop < windowHeight - revealPoint){
+    if (elementTop < windowHeight - revealPoint) {
       el.classList.add('active-reveal');
     }
   });
-});
+}
 
-const revealElements = document.querySelectorAll('.home-container, .about-container, .projects-container, .services-container, .contact-content');
-revealElements.forEach(el => el.classList.add('reveal'));
+// Run immediately on script execution, DOM ready, and window load
+handleReveal();
+window.addEventListener('DOMContentLoaded', handleReveal);
+window.addEventListener('load', handleReveal);
 
 const backToTop = document.createElement('div');
 backToTop.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
@@ -70,6 +63,21 @@ backToTop.addEventListener('click', () => {
 
 backToTop.addEventListener('mouseover', () => backToTop.style.transform = 'scale(1.2)');
 backToTop.addEventListener('mouseout', () => backToTop.style.transform = 'scale(1)');
+
+window.addEventListener('scroll', () => {
+  let scrollPos = window.scrollY + 100;
+
+  sections.forEach(section => {
+    if (scrollPos >= section.offsetTop && scrollPos < section.offsetTop + section.offsetHeight) {
+      removeActive();
+      const activeLink = document.querySelector(`.ul-list li a[href="#${section.id}"]`);
+      if (activeLink) activeLink.parentElement.classList.add('active');
+    }
+  });
+
+  backToTop.classList.toggle('is-visible', window.scrollY > 500);
+  handleReveal();
+});
 
 const filterButtons = document.querySelectorAll('.filter-button');
 const projectCards = document.querySelectorAll('.project-card');
@@ -88,7 +96,7 @@ filterButtons.forEach(button => {
   });
 });
 
-const cards = document.querySelectorAll('.project-card, .c1, .service-card');
+const cards = document.querySelectorAll('.project-card, .c1');
 cards.forEach(card => {
   card.addEventListener('mouseenter', () => card.style.transform = 'translateY(-8px) scale(1.05)');
   card.addEventListener('mouseleave', () => card.style.transform = 'translateY(0) scale(1)');
